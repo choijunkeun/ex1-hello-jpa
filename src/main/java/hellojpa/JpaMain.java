@@ -23,7 +23,8 @@ public class JpaMain {
             Member member = new Member();
             member.setId(2L);
             member.setName("HelloB");
-            em.persist(member); // Insert
+            // EntityManager.persist()는 사실 DB에 저장하는게 아니라 엔티티를 영속성 컨텍스트라는곳에 저장한다는 뜻
+            em.persist(member);
              */
 
             /*   // select
@@ -61,7 +62,7 @@ public class JpaMain {
             */
 
             // JPA는 테이블을 대상으로 코드를 짜지 않음. Member객체를 대상으로 콜을 하는것. "Member객체를 다 가져와"
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+           /*  List<Member> result = em.createQuery("select m from Member as m", Member.class)
                     .setFirstResult(1)  // 1번부터
                     .setMaxResults(10)  // 10개 가져와 (페이징 처리에 사용)
                     .getResultList();
@@ -69,8 +70,44 @@ public class JpaMain {
             for(Member member : result) {
                 System.out.println("member.name = " + member.getName());
             }
+            */
+
+            // 영속성 컨텍스트?
+//            Member member = new Member();
+//            member.setId(101L);
+//            member.setName("HelloJPA"); // 여기까지는 비영속 상태
+
+//            em.persist(member); // 여기서부터 영속상태 (영속성 컨텍스트를 통해 관리가 된다는 뜻)
+                                    // 영속상태가 된다고 DB에 쿼리가 날라가는게 아니라 commit하는 시점에 날라감
+//            em.detach(member);  // 회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
+
+//            em.remove(member);  // 이건 객체를 삭제한 상태(삭제) delete
+
+//            Member findMember = em.find(Member.class, 101L);    // 1차캐시에 없기 때문에 DB에서 조회하고 영속성컨텍스트의 1차캐시에 저장
+//            Member findMember2 = em.find(Member.class, 101L);   // 위의 코드에서 1차캐시에 들어가 있기 떄문에 select쿼리가 나가지 않음
+//            System.out.println("findMember.id = " + findMember.getId());
+//            System.out.println("findMember.name = " + findMember.getName());
+
+//            System.out.println("result = " + (findMember == findMember2));  // 영속엔티티의 동일성을 보장해준다. 따라서 True반환
+
+            Member member = em.find(Member.class, 150L);    // 영속상태, 1차캐시에 올라감
+            member.setName("AAAAA");
 
 
+            // 준영속 상태로 만드는 방법
+            /*  em.detach(entity)   특정 엔티티만 준영속 상태로 전환
+                em.clear()          영속성 컨텍스트를 완전히 초기화
+                em.close()          영속성 컨텍스트를 종료
+             */
+//            em.detach(member);
+//            em.clear();
+//            em.close();
+            System.out.println("===================");
+            Member member2 = em.find(Member.class, 150L);    // 영속상태, 1차캐시에 올라감
+
+            // flush  1. em.flush()호출,  2. commit시 자동호출, 3. JPQL 쿼리실행 시 자동호출
+            // 플러시는 영속성 컨텍스트를 비우지않음, 영속성 컨텍스트의 변경내용을 데이터베이스에 동기화
+            // 트랙제션이라는 작업 단위가 중요 -> 커밋 직전에만 동기화 하면 됨
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
