@@ -90,8 +90,8 @@ public class JpaMain {
 
 //            System.out.println("result = " + (findMember == findMember2));  // 영속엔티티의 동일성을 보장해준다. 따라서 True반환
 
-            Member member = em.find(Member.class, 150L);    // 영속상태, 1차캐시에 올라감
-            member.setName("AAAAA");
+//            Member member = em.find(Member.class, 150L);    // 영속상태, 1차캐시에 올라감
+//            member.setName("AAAAA");
 
 
             // 준영속 상태로 만드는 방법
@@ -102,12 +102,25 @@ public class JpaMain {
 //            em.detach(member);
 //            em.clear();
 //            em.close();
-            System.out.println("===================");
-            Member member2 = em.find(Member.class, 150L);    // 영속상태, 1차캐시에 올라감
+//            System.out.println("===================");
+//            Member member2 = em.find(Member.class, 150L);    // 영속상태, 1차캐시에 올라감
 
             // flush  1. em.flush()호출,  2. commit시 자동호출, 3. JPQL 쿼리실행 시 자동호출
             // 플러시는 영속성 컨텍스트를 비우지않음, 영속성 컨텍스트의 변경내용을 데이터베이스에 동기화
             // 트랙제션이라는 작업 단위가 중요 -> 커밋 직전에만 동기화 하면 됨
+
+
+            /*  @Enumerated(EnumType.STRING) test */
+            Member member = new Member();
+            member.setId(2L);
+            member.setUsername("B");
+            member.setRoleType(RoleType.USER);
+
+            em.persist(member);
+
+
+
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

@@ -21,7 +21,15 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="10"/>
-            <!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
+
+            <!--
+            create         : 기존 테이블 삭제 후 다시 생성             (운영DB에는 절대 사용하면 안됨)
+            create-drop    : create와 동일 + 종료시점에 테이블 drop    (운영DB에는 절대 사용하면 안됨)
+            update         : 변경분만 반영                           (운영DB에는 절대 사용하면 안됨)
+            validate       : 엔티티와 테이블이 정상 매핑되었는지만 확인
+            none           : 사용하지 않음 (그냥 주석하면 같은 의미)
+            -->
+            <property name="hibernate.hbm2ddl.auto" value="create" />
         </properties>
     </persistence-unit>
 </persistence>
