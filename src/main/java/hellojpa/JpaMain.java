@@ -14,24 +14,29 @@ public class JpaMain {
 
         try {
             // 저장
-            Team team = new Team();
+            Team team = new Team(); // team이 연관관계의 주인
             team.setName("TeamA");
             em.persist(team);
 
             Member member = new Member();
             member.setUsername("member1");
-            member.setTeam(team);
             em.persist(member);
+
+            team.addMember(member);
 
             em.flush();
             em.clear();
 
-            Member findMember = em.find(Member.class, member.getId());
-            List<Member> members = findMember.getTeam().getMembers();   // 양방향연관관계를 사용함으로서 member>team>member로 찾아옴
+            Team findTeam = em.find(Team.class, team.getId());  // 1차 캐시
+            List<Member> members = findTeam.getMembers();
 
-            for (Member m: members) {
-                System.out.println("m= " + m.getUsername());
+            System.out.println(" =============" );
+            for(Member m : members) {
+                System.out.println("m.getUsername() = " + m.getUsername());
             }
+            System.out.println(" =============" );
+
+
 
             tx.commit();
         } catch (Exception e) {

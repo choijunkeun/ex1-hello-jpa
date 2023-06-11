@@ -30,6 +30,10 @@ public class Member {
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
+    @OneToOne   // 1:1관계
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
     public Long getId() {
         return id;
     }
@@ -53,5 +57,7 @@ public class Member {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+
 }
 
