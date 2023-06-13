@@ -14,7 +14,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -33,6 +35,7 @@ public class Member {
     @OneToOne   // 1:1관계
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
+
 
     public Long getId() {
         return id;
