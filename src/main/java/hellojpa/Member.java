@@ -20,21 +20,30 @@ import java.util.List;
 
 
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(name = "name", nullable = false)  // 데이터베이스 컬럼명은 name이야
+    @Column(name = "USERNAME")
     private String username;
 
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
+    @JoinColumn(name = "TEAM_ID", insertable = false, updatable =false)
     private Team team;
 
     @OneToOne   // 1:1관계
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<MemberProduct> memberProducts = new ArrayList<>();
+//
+//    private String createBy;
+//    private LocalDateTime createdDate;
+//    private String lastModifiedBy;
+//    private LocalDateTime lastModifiedDate;
 
 
     public Long getId() {
