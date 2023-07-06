@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
 public class JpaMain {
-
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
@@ -12,24 +11,22 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member1 = new Member();
-            member1.setUsername("member1");
-            em.persist(member1);
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            Member member2 = new Member();
-            member2.setUsername("member2");
-            em.persist(member2);
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
+            em.persist(child1);
+            em.persist(child2);
 
             em.flush();
             em.clear();
 
-            Member referenceMember = em.getReference(Member.class, member1.getId());
-            System.out.println("referenceMember.getClass() = " + referenceMember.getClass());
-
-//            referenceMember.getUsername();  // 프록시 강제 초기화(JPA표준은 강제초기화가 없어서 이렇게해야함)
-            Hibernate.initialize(referenceMember);  // 프록시 강제 초기화(Hibernate에서 구현되어있는것)
-            System.out.println("referenceMember isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(referenceMember));
-
+            Parent findParent = em.find(Parent.class, parent.getId());
+            Child findChild = em.find(Child.class, child1.getId());
 
             tx.commit();
         } catch (Exception e) {
